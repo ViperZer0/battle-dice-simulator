@@ -13,10 +13,15 @@ class Dice:
         else:
             return None
     def __hash__(self):
-        return self.name
+        return self.name.lower()
 
     def __eq__(self,other):
-        return self.name == other.name
+        if type(other) == str:
+            return self.name.lower() == other.lower()
+        if type(other) == type(self):
+            return self.name.lower() == other.name.lower()
+        else:
+            return False
    
 class Fairy(Dice):
     def __init__(self):

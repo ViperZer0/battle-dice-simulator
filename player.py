@@ -20,12 +20,41 @@ class Player:
         self.shieldHealth = 0
         self.permaDead = False
         self.dead = False
+
     def __hash__(self):
         return self.id
 
     def __eq__(self,other):
-        return self.id == other.id
+        if type(self) == type(other):
+            return self.id == other.id
+        elif type(other) == int:
+            return self.id == other
     
+    def hasDice(self,dice):
+        #Accept both a single die and multiple dice.
+        #Must have ALL of the dice listed.
+        if type(dice) == list:
+            for die in dice:
+                if not die in self.dice:
+                    return False
+
+            else:
+                return True
+        else:
+            return dice in self.dice
+    
+    def sharesDiceWith(self,player):
+        for d in self.dice:
+            if d in player.dice:
+                return True
+        else:
+            return False
+
+    def printDice(self):
+        for d in self.dice:
+            print("{} ".format(d.name),end="")
+        print()
+
     #Player's turn.
     def turn(self):
         self.setup()
@@ -44,7 +73,7 @@ class Player:
         for die in freeze:
             die.frozen = True
         self.shieldHealth = 0
-
+    
 
     #Handle player rolls, return results
     def roll(self):

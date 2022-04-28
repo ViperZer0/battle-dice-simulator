@@ -3,7 +3,7 @@ import effects
 import dice
 import abilities
 import random
-class Results:
+class Scores:
     def __init__(self,w=0,l=0,t=0):
         self.wins = w
         self.losses = l
@@ -22,21 +22,21 @@ class Results:
         return self.wins/(self.wins+self.losses+self.ties)*100
 
     def __add__(self,other):
-        return Results(self.wins+other.wins,self.losses+other.losses,self.ties + other.ties)
+        return Scores(self.wins+other.wins,self.losses+other.losses,self.ties + other.ties)
     
 class Matchup:
     def __init__(self,players,matches):
         self.players = {}
         self.matches = matches
         for player in players:
-            self.players.update({player:Results()})
+            self.players.update({player:Scores()})
             
-    def calcResults(self):
+    def calcScores(self):
         for i in range(0,self.matches):
             self.game() #Run a game
             self.resetPlayers() #Reset players
         
-    def showResults(self):
+    def showScores(self):
         for player,score in self.players.items():
             for d in player.dice:
                 print("{} ".format(d.name),end="")
@@ -44,7 +44,7 @@ class Matchup:
             print("\t{:<6} W\t{:<6} L\t{:<6} T\t{:.02f}% Win Rate".format(score.wins,score.losses,score.ties,score.winPercent()))
 
 
-    def returnResults(self):
+    def returnScores(self):
         return self.players
 
     def game(self):
