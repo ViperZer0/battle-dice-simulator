@@ -1,10 +1,11 @@
 import multiprocessing as mp
+import json
 
 class Results:
     def __init__(self):
         self.manager = mp.Manager()
         self.results = manager.dict()
-    
+
     def addToResults(playerResults):
         #Convert {player1:Results(),player2:Results()} to {player1:{player2,Results()}}
         c = list(playerResults.items())
@@ -23,6 +24,8 @@ class Results:
     #Not actually implemented.
     #Gonna make this XML not CSV.
     def writeResults(filename):
-        pass
+        with open(filename,'w') as f:
+            f.write(json.dumps(self.results))
      
+    
 

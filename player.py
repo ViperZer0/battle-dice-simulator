@@ -30,6 +30,9 @@ class Player:
         elif type(other) == int:
             return self.id == other
     
+    #For JSON conversion
+    def default(self, o):
+
     def hasDice(self,dice):
         #Accept both a single die and multiple dice.
         #Must have ALL of the dice listed.

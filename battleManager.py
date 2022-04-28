@@ -1,4 +1,7 @@
 from matchup import Matchup
+from results import Results
+from multiprocessing import Pool
+import itertools
 class BattleManager():
     def __init__(self,playerManager):
         self.pm = playerManager
@@ -10,16 +13,17 @@ class BattleManager():
         matchup = Matchup([p1,p2],self.battles)
         matchup.calcScores()
         matchup.showScores()
+        return matchup.returnScores()
+    
+    def runAllBattles(self):
+        with Pool() as pool:
+            results = Results()
+            battles = itertools.combinations(self.pm.getPlayers(),2)
+            #total combinations
+            end = 5937750
 
-    """
-    def duel(pool,players,results):
-        def error(e):
-            print("ERROR: ", e)
-        battles = itertools.combinations(players,2)
-        #Yeah we're not doing multiple iterations
-        end = 5937750
-        
-        for i,b in enumerate(filter(lambda x: not x[0].sharesDicewith(x[1]),battles)): 
-                           
-            a = pool.apply_async(battle,args=(b,1000,i,end,),callback = lambda x: pairResults(results,x),error_callback=error)
-    """
+            for i,b in enumerate(filter(lambda x: not x[0].sharesDiceWith(x[1]),battles)):
+                a = pool.apply_async(battle,args=(b[0],b[1]),callback = results.addToResults,error_callback=lambda e: print("ERROR: {}".format(e)))
+
+            a.wait()
+            results.writeResults("results.xml")
