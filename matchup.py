@@ -3,6 +3,8 @@ import effects
 import dice
 import abilities
 import random
+import functools
+
 class Scores:
     def __init__(self,w=0,l=0,t=0):
         self.wins = w
@@ -56,9 +58,17 @@ class Matchup:
         while len(combatants) > 1 and turns < 1000:
             for player in combatants:
                 player.turn()
-            for player in combatants:
-                if player.permaDead:
-                    self.players[player].addLoss()
+
+            #If all remaining players are dead, give them all a tie.
+            if functools.reduce(lambda x,y: x and y, map(lambda x: x.permaDead,self.players)):
+                for player in combatants:
+                    #Testing this
+                    self.players[player].addTie()
+            #If not, remove any dead players from the game
+            else:
+                for player in combatants:
+                    if player.permaDead:
+                           self.players[player].addLoss()
 
             turns += 1
             combatants = [player for player in combatants if not player.permaDead]    
